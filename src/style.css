@@ -1,3 +1,43 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.flip-box {
+	perspective: 1000px; /* Remove this if you don't want the 3D effect */
+
+	@apply w-full h-full bg-transparent cursor-pointer;
+}
+
+/* This container is needed to position the front and back side */
+.flip-box-inner {
+	padding-top: 52.65%;
+	transition: transform 0.8s;
+	transform-style: preserve-3d;
+
+	@apply relative w-full h-full text-center;
+}
+
+/* Do an horizontal flip when you move the mouse over the flip box container */
+.flip-box:hover .flip-box-inner {
+	transform: rotateY(180deg);
+}
+
+/* Position the front and back side */
+.flip-box-front,
+.flip-box-back {
+	backface-visibility: hidden;
+
+	@apply absolute top-0 left-0 w-full h-full;
+}
+
+/* Style the front side (fallback if image is missing) */
+.flip-box-front {
+	@apply bg-black text-white flex justify-center items-center;
+}
+
+/* Style the back side */
+.flip-box-back {
+	transform: rotateY(180deg);
+
+	@apply bg-black text-white flex justify-center items-center;
+}

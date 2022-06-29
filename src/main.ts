@@ -91,7 +91,6 @@ shuffle(cards);
 
 const flipCards = cards.map((card) => {
 	const front = newElement("span");
-	front.innerText = card.front;
 
 	const back = newElement("span");
 	back.innerText = card.back;
@@ -105,11 +104,17 @@ const flipCards = cards.map((card) => {
 renderScores();
 placeCards(flipCards);
 
+let frozen: boolean = false;
+
 ///////////////////////
 /// Event Listeners ///
 ///////////////////////
 
 document.addEventListener("click", (event) => {
+	if (frozen == true) {
+		return;
+	}
+
 	const target = event.target as HTMLElement;
 
 	if (target.matches(".flip-box *")) {
@@ -143,13 +148,22 @@ document.addEventListener("click", (event) => {
 				) {
 					cardMatchDict[cardId].matched = true;
 					increaseScore();
+					selectedCards = [];
+					nextTurn();
 				} else {
-					for (const element of selectedCards) {
-						toggleClasses(element, ["flipped"]);
-					}
+					frozen = true;
+
+					setTimeout(() => {
+						frozen = false;
+
+						for (const element of selectedCards) {
+							toggleClasses(element, ["flipped"]);
+						}
+
+						selectedCards = [];
+						nextTurn();
+					}, 1500);
 				}
-				selectedCards = [];
-				nextTurn();
 			}
 		}
 	}

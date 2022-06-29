@@ -32,7 +32,11 @@
 
 /* Style the front side (fallback if image is missing) */
 .flip-box-front {
-	@apply bg-black text-white flex justify-center items-center;
+	background-image: url("https://upload.wikimedia.org/wikipedia/commons/5/54/Card_back_06.svg");
+	background-size: cover;
+	background-repeat: no-repeat;
+
+	@apply text-white flex justify-center items-center;
 }
 
 /* Style the back side */

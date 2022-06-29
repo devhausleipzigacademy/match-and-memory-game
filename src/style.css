@@ -17,8 +17,8 @@
 	@apply relative w-full h-full text-center;
 }
 
-/* Do an horizontal flip when you move the mouse over the flip box container */
-.flip-box:hover .flip-box-inner {
+/* Do a horizontal flip*/
+.flipped .flip-box-inner {
 	transform: rotateY(180deg);
 }
 

@@ -4,6 +4,16 @@ function addClasses(element: HTMLElement, classes: Array<string>) {
 	element.classList.add(...classes);
 }
 
+function removeClasses(element: HTMLElement, classes: Array<string>) {
+	element.classList.remove(...classes);
+}
+
+function toggleClasses(element: HTMLElement, classes: Array<string>) {
+	for (const className of classes) {
+		element.classList.toggle(className);
+	}
+}
+
 function newElement(tag: string, classes: Array<string> = []) {
 	const element = document.createElement(tag);
 	addClasses(element, classes);
@@ -65,3 +75,20 @@ const flipCards = testCards.map((card) => {
 });
 
 placeCards(flipCards);
+
+document.addEventListener("click", (event) => {
+	const target = event.target as HTMLElement;
+
+	if (target.matches(".flip-box *")) {
+		const flipBox = target.closest(".flip-box") as HTMLElement;
+		toggleClasses(flipBox, ["flipped"]);
+	}
+});
+
+// how should we model data for cards + game state
+
+// players?
+// turns?
+// what information does each flip card need?
+
+// how do we compare two cards to see if they're the same?

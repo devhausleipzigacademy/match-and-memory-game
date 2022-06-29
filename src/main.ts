@@ -1,29 +1,31 @@
+import {
+	addChildren,
+	addClasses,
+	removeClasses,
+	toggleClasses,
+	newElement,
+} from "./utils";
+
+import { Card, Cards, CardDict, Player } from "./types";
+
+import { FlipBox } from "./components/flipbox";
+
+import deck from "./cardDeck";
+
+//////////////////////////////////////////
+/// Prepare Game Board & Initial State ///
+//////////////////////////////////////////
+
 const cardGrid = document.getElementById("card-grid") as HTMLElement;
 
-function addClasses(element: HTMLElement, classes: Array<string>) {
-	element.classList.add(...classes);
-}
+let selectedCards = [];
 
-function removeClasses(element: HTMLElement, classes: Array<string>) {
-	element.classList.remove(...classes);
-}
+const players: Array<Player> = [];
 
-function toggleClasses(element: HTMLElement, classes: Array<string>) {
-	for (const className of classes) {
-		element.classList.toggle(className);
-	}
-}
+let playerTurn: number = 0;
 
-function newElement(tag: string, classes: Array<string> = []) {
-	const element = document.createElement(tag);
-	addClasses(element, classes);
-	return element;
-}
-
-function addChildren(parent: HTMLElement, children: Array<HTMLElement>): void {
-	for (const child of children) {
-		parent.appendChild(child);
-	}
+function nextTurn() {
+	playerTurn = (playerTurn + 1) % players.length;
 }
 
 function placeCards(cards: Array<any>): void {
@@ -37,44 +39,25 @@ function placeCards(cards: Array<any>): void {
 	addChildren(cardGrid, cardElements);
 }
 
-function FlipBox(
-	frontChildren: Array<HTMLElement>,
-	backChildren: Array<HTMLElement>
-) {
-	const flipBox = newElement("div", ["flip-box"]);
+const cards: Cards = [...deck, ...deck].sort(() => 0.5 - Math.random());
 
-	const flipBoxInner = newElement("div", ["flip-box-inner"]);
-	addChildren(flipBox, [flipBoxInner]);
+console.log(cards);
 
-	const flipBoxFront = newElement("div", ["flip-box-front"]);
-	addChildren(flipBoxFront, frontChildren);
-
-	const flipBoxBack = newElement("div", ["flip-box-back"]);
-	addChildren(flipBoxBack, backChildren);
-
-	addChildren(flipBoxInner, [flipBoxFront, flipBoxBack]);
-
-	return flipBox;
-}
-
-const testCards = Array.from({ length: 18 }, () => {
-	return {
-		frontText: "front",
-		backText: "back",
-	};
-});
-
-const flipCards = testCards.map((card) => {
+const flipCards = cards.map((card) => {
 	const front = newElement("span");
-	front.innerText = card.frontText;
+	front.innerText = card.front;
 
 	const back = newElement("span");
-	back.innerText = card.backText;
+	back.innerText = card.back;
 
 	return FlipBox([front], [back]);
 });
 
 placeCards(flipCards);
+
+///////////////////////
+/// Event Listeners ///
+///////////////////////
 
 document.addEventListener("click", (event) => {
 	const target = event.target as HTMLElement;
@@ -84,11 +67,3 @@ document.addEventListener("click", (event) => {
 		toggleClasses(flipBox, ["flipped"]);
 	}
 });
-
-// how should we model data for cards + game state
-
-// players?
-// turns?
-// what information does each flip card need?
-
-// how do we compare two cards to see if they're the same?

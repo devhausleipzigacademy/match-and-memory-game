@@ -120,12 +120,27 @@ document.addEventListener("click", (event) => {
 		const { matched, card } = cardMatchDict[cardId];
 
 		if (!matched && selectedCards.length < 2) {
-			selectedCards.push(flipCard);
+			if (selectedCards.length == 1) {
+				const selectedElement1 = selectedCards[0];
+				if (selectedElement1.id == flipCard.id) {
+					return;
+				}
+			}
 
+			selectedCards.push(flipCard);
 			toggleClasses(flipCard, ["flipped"]);
 
 			if (selectedCards.length == 2) {
-				if (selectedCards[0] == selectedCards[1]) {
+				const selectedElement1 = selectedCards[0];
+				const selectedElement2 = selectedCards[1];
+
+				const cardId1 = selectedElement1.id.split("_")[0];
+				const cardId2 = selectedElement2.id.split("_")[0];
+
+				if (
+					cardId1 == cardId2 &&
+					selectedElement1.id != selectedElement2.id
+				) {
 					cardMatchDict[cardId].matched = true;
 					increaseScore();
 				} else {

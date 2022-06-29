@@ -28,7 +28,8 @@ export function addChildren(
 }
 
 export function removeChildren(parent: HTMLElement): void {
-	for (const child of parent.children) {
+	const children = [...parent.children];
+	for (const child of children) {
 		parent.removeChild(child);
 	}
 }

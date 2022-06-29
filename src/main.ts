@@ -4,6 +4,7 @@ import {
 	removeClasses,
 	toggleClasses,
 	newElement,
+	shuffle,
 } from "./utils";
 
 import { Card, Cards, CardDict, Player } from "./types";
@@ -39,9 +40,8 @@ function placeCards(cards: Array<any>): void {
 	addChildren(cardGrid, cardElements);
 }
 
-const cards: Cards = [...deck, ...deck].sort(() => 0.5 - Math.random());
-
-console.log(cards);
+const cards: Cards = [...deck, ...deck];
+shuffle(cards);
 
 const flipCards = cards.map((card) => {
 	const front = newElement("span");

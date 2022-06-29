@@ -27,9 +27,16 @@ export function addChildren(
 	}
 }
 
+// Fisher-Yates Algorithm
 // https://stackoverflow.com/a/25984542
-function shuffle(a, b, c, d) {
-	c = a.length;
-	while (c)
-		(b = (Math.random() * c--) | 0), (d = a[c]), (a[c] = a[b]), (a[b] = d);
+export function shuffle(array) {
+	var count = array.length,
+		randomnumber,
+		temp;
+	while (count) {
+		randomnumber = (Math.random() * count--) | 0;
+		temp = array[count];
+		array[count] = array[randomnumber];
+		array[randomnumber] = temp;
+	}
 }

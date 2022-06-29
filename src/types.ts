@@ -7,7 +7,7 @@ export type Card = {
 
 export type Cards = Array<Card>;
 
-export type CardDict = Record<string, Card>;
+export type CardMatchDict = Record<string, { matched: boolean; card: Card }>;
 
 export type Player = {
 	name: string;

@@ -27,6 +27,12 @@ export function addChildren(
 	}
 }
 
+export function removeChildren(parent: HTMLElement): void {
+	for (const child of parent.children) {
+		parent.removeChild(child);
+	}
+}
+
 // Fisher-Yates Algorithm
 // https://stackoverflow.com/a/25984542
 export function shuffle(array) {

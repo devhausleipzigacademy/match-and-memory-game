@@ -1,6 +1,6 @@
 import { addChildren, newElement } from "../utils";
 
-export function FlipBox(
+export function FlipCard(
 	frontChildren: Array<HTMLElement>,
 	backChildren: Array<HTMLElement>
 ) {

@@ -20,6 +20,8 @@ const cardGrid = document.getElementById("card-grid") as HTMLElement;
 
 let selectedCards: Array<HTMLElement> = [];
 
+let sequenceLength = 2;
+
 const players: Array<Player> = [
 	{
 		name: "Player 1",
@@ -35,7 +37,6 @@ const scoreBoard = document.getElementById("score-board") as HTMLElement;
 
 function renderScores() {
 	removeChildren(scoreBoard);
-	console.log(scoreBoard.children);
 
 	const scoreElements: Array<HTMLElement> = players.map((player, index) => {
 		const element = newElement("div");
@@ -119,6 +120,12 @@ function resetAfterNoMatch() {
 	nextTurn();
 }
 
+function binaryIdMatch(ids: Array<string>) {
+	return ids[0] == ids[1];
+}
+
+let matchPredicate = binaryIdMatch;
+
 ///////////////////////
 /// Event Listeners ///
 ///////////////////////
@@ -131,11 +138,11 @@ document.addEventListener("click", (event) => {
 	const target = event.target as HTMLElement;
 
 	if (target.matches(".flip-box *")) {
-		const flipCard = target.closest(".flip-box") as HTMLElement;
+		const currentFlipCard = target.closest(".flip-box") as HTMLElement;
 
-		const cardId = flipCard.id.split("_")[0];
+		const currentCardId = currentFlipCard.id.split("_")[0];
 
-		const { matched } = cardMatchDict[cardId];
+		const { matched } = cardMatchDict[currentCardId];
 
 		const ongoingSelection = !matched && selectedCards.length < 2;
 
@@ -145,29 +152,26 @@ document.addEventListener("click", (event) => {
 
 		if (selectedCards.length > 0) {
 			const alreadySelected = selectedCards.some((selectedCard) => {
-				return selectedCard.id == flipCard.id;
+				return selectedCard.id == currentFlipCard.id;
 			});
 
 			if (alreadySelected) return;
 		}
 
-		selectedCards.push(flipCard);
-		toggleClasses(flipCard, ["flipped"]);
+		selectedCards.push(currentFlipCard);
+		toggleClasses(currentFlipCard, ["flipped"]);
 
-		if (selectedCards.length != 2) {
+		if (selectedCards.length != sequenceLength) {
 			return;
 		}
 
-		const selectedElement1 = selectedCards[0];
-		const selectedElement2 = selectedCards[1];
+		const cardIds = selectedCards.map((element) => {
+			return element.id.split("_")[0];
+		});
 
-		const cardId1 = selectedElement1.id.split("_")[0];
-		const cardId2 = selectedElement2.id.split("_")[0];
+		const match = matchPredicate(cardIds);
 
-		const sameCard = cardId1 == cardId2;
-		const sameElement = selectedElement1.id == selectedElement2.id;
-
-		if (sameCard && !sameElement) resetAfterMatch(cardId);
+		if (match) resetAfterMatch(currentCardId);
 		else {
 			frozen = true;
 

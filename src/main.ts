@@ -1,14 +1,12 @@
 import {
 	addChildren,
 	removeChildren,
-	addClasses,
-	removeClasses,
 	toggleClasses,
 	newElement,
 	shuffle,
 } from "./utils";
 
-import { Card, Cards, CardMatchDict, Player } from "./types";
+import { Cards, CardMatchDict, Player } from "./types";
 
 import { FlipCard } from "./components/flip-card";
 
@@ -63,8 +61,7 @@ function increaseScore() {
 	players[playerTurn].score++;
 }
 
-function placeCards(cards: Array<any>): void {
-	// transform cards data into appropriate elements
+function placeCards(cards: Array<HTMLElement>): void {
 	const cardElements = cards.map((card) => {
 		const element = newElement("div", ["grid-cell", "bg-blue-400"]);
 		addChildren(element, [card]);
@@ -106,6 +103,22 @@ placeCards(flipCards);
 
 let frozen: boolean = false;
 
+function resetAfterMatch(cardId) {
+	cardMatchDict[cardId].matched = true;
+	increaseScore();
+	selectedCards = [];
+	nextTurn();
+}
+
+function resetAfterNoMatch() {
+	for (const element of selectedCards) {
+		toggleClasses(element, ["flipped"]);
+	}
+
+	selectedCards = [];
+	nextTurn();
+}
+
 ///////////////////////
 /// Event Listeners ///
 ///////////////////////
@@ -122,49 +135,46 @@ document.addEventListener("click", (event) => {
 
 		const cardId = flipCard.id.split("_")[0];
 
-		const { matched, card } = cardMatchDict[cardId];
+		const { matched } = cardMatchDict[cardId];
 
-		if (!matched && selectedCards.length < 2) {
-			if (selectedCards.length == 1) {
-				const selectedElement1 = selectedCards[0];
-				if (selectedElement1.id == flipCard.id) {
-					return;
-				}
+		const ongoingSelection = !matched && selectedCards.length < 2;
+
+		if (!ongoingSelection) {
+			return;
+		}
+
+		if (selectedCards.length == 1) {
+			const selectedElement1 = selectedCards[0];
+			if (selectedElement1.id == flipCard.id) {
+				return;
 			}
+		}
 
-			selectedCards.push(flipCard);
-			toggleClasses(flipCard, ["flipped"]);
+		selectedCards.push(flipCard);
+		toggleClasses(flipCard, ["flipped"]);
 
-			if (selectedCards.length == 2) {
-				const selectedElement1 = selectedCards[0];
-				const selectedElement2 = selectedCards[1];
+		if (selectedCards.length != 2) {
+			return;
+		}
 
-				const cardId1 = selectedElement1.id.split("_")[0];
-				const cardId2 = selectedElement2.id.split("_")[0];
+		const selectedElement1 = selectedCards[0];
+		const selectedElement2 = selectedCards[1];
 
-				if (
-					cardId1 == cardId2 &&
-					selectedElement1.id != selectedElement2.id
-				) {
-					cardMatchDict[cardId].matched = true;
-					increaseScore();
-					selectedCards = [];
-					nextTurn();
-				} else {
-					frozen = true;
+		const cardId1 = selectedElement1.id.split("_")[0];
+		const cardId2 = selectedElement2.id.split("_")[0];
 
-					setTimeout(() => {
-						frozen = false;
+		const sameCard = cardId1 == cardId2;
+		const sameElement = selectedElement1.id == selectedElement2.id;
 
-						for (const element of selectedCards) {
-							toggleClasses(element, ["flipped"]);
-						}
+		if (sameCard && !sameElement) {
+			resetAfterMatch(cardId);
+		} else {
+			frozen = true;
 
-						selectedCards = [];
-						nextTurn();
-					}, 1500);
-				}
-			}
+			setTimeout(() => {
+				frozen = false;
+				resetAfterNoMatch();
+			}, 1500);
 		}
 	}
 });

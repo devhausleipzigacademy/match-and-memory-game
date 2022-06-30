@@ -1,14 +1,12 @@
 import {
 	addChildren,
 	removeChildren,
-	addClasses,
-	removeClasses,
 	toggleClasses,
 	newElement,
 	shuffle,
 } from "./utils";
 
-import { Card, Cards, CardMatchDict, Player } from "./types";
+import { Cards, CardMatchDict, Player } from "./types";
 
 import { FlipCard } from "./components/flip-card";
 
@@ -40,6 +38,8 @@ function roundCounter() {
 const cardGrid = document.getElementById("card-grid") as HTMLElement;
 
 let selectedCards: Array<HTMLElement> = [];
+
+let sequenceLength = 2;
 
 const players: Array<Player> = [
 	{
@@ -103,8 +103,7 @@ function increaseScore() {
 	players[playerTurn].score++;
 }
 
-function placeCards(cards: Array<any>): void {
-	// transform cards data into appropriate elements
+function placeCards(cards: Array<HTMLElement>): void {
 	const cardElements = cards.map((card) => {
 		const element = newElement("div", ["grid-cell", "bg-blue-400"]);
 		addChildren(element, [card]);
@@ -151,6 +150,28 @@ toggleClasses(firstPlayer, ["border-indigo-800", "border-yellow-400"]);
 
 let frozen: boolean = false;
 
+function resetAfterMatch(cardId) {
+	cardMatchDict[cardId].matched = true;
+	increaseScore();
+	selectedCards = [];
+	nextTurn();
+}
+
+function resetAfterNoMatch() {
+	for (const element of selectedCards) {
+		toggleClasses(element, ["flipped"]);
+	}
+
+	selectedCards = [];
+	nextTurn();
+}
+
+function binaryIdMatch(ids: Array<string>) {
+	return ids[0] == ids[1];
+}
+
+let matchPredicate = binaryIdMatch;
+
 ///////////////////////
 /// Event Listeners ///
 ///////////////////////
@@ -163,50 +184,47 @@ document.addEventListener("click", (event) => {
 	const target = event.target as HTMLElement;
 
 	if (target.matches(".flip-box *")) {
-		const flipCard = target.closest(".flip-box") as HTMLElement;
+		const currentFlipCard = target.closest(".flip-box") as HTMLElement;
 
-		const cardId = flipCard.id.split("_")[0];
+		const currentCardId = currentFlipCard.id.split("_")[0];
 
-		const { matched, card } = cardMatchDict[cardId];
+		const { matched } = cardMatchDict[currentCardId];
 
-		if (!matched && selectedCards.length < 2) {
-			if (selectedCards.length == 1) {
-				const selectedElement1 = selectedCards[0];
-				if (selectedElement1.id == flipCard.id) {
-					return;
-				}
-			}
+		const ongoingSelection = !matched && selectedCards.length < 2;
 
-			selectedCards.push(flipCard);
-			toggleClasses(flipCard, ["flipped"]);
+		if (!ongoingSelection) {
+			return;
+		}
 
-			if (selectedCards.length == 2) {
-				const selectedElement1 = selectedCards[0];
-				const selectedElement2 = selectedCards[1];
+		if (selectedCards.length > 0) {
+			const alreadySelected = selectedCards.some((selectedCard) => {
+				return selectedCard.id == currentFlipCard.id;
+			});
 
-				const cardId1 = selectedElement1.id.split("_")[0];
-				const cardId2 = selectedElement2.id.split("_")[0];
+			if (alreadySelected) return;
+		}
 
-				if (cardId1 == cardId2 && selectedElement1.id != selectedElement2.id) {
-					cardMatchDict[cardId].matched = true;
-					increaseScore();
-					selectedCards = [];
-					nextTurn();
-				} else {
-					frozen = true;
+		selectedCards.push(currentFlipCard);
+		toggleClasses(currentFlipCard, ["flipped"]);
 
-					setTimeout(() => {
-						frozen = false;
+		if (selectedCards.length != sequenceLength) {
+			return;
+		}
 
-						for (const element of selectedCards) {
-							toggleClasses(element, ["flipped"]);
-						}
+		const cardIds = selectedCards.map((element) => {
+			return element.id.split("_")[0];
+		});
 
-						selectedCards = [];
-						nextTurn();
-					}, 1500);
-				}
-			}
+		const match = matchPredicate(cardIds);
+
+		if (match) resetAfterMatch(currentCardId);
+		else {
+			frozen = true;
+
+			setTimeout(() => {
+				frozen = false;
+				resetAfterNoMatch();
+			}, 1500);
 		}
 	}
 });

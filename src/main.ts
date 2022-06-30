@@ -143,11 +143,12 @@ document.addEventListener("click", (event) => {
 			return;
 		}
 
-		if (selectedCards.length == 1) {
-			const selectedElement1 = selectedCards[0];
-			if (selectedElement1.id == flipCard.id) {
-				return;
-			}
+		if (selectedCards.length > 0) {
+			const alreadySelected = selectedCards.some((selectedCard) => {
+				return selectedCard.id == flipCard.id;
+			});
+
+			if (alreadySelected) return;
 		}
 
 		selectedCards.push(flipCard);
@@ -166,9 +167,8 @@ document.addEventListener("click", (event) => {
 		const sameCard = cardId1 == cardId2;
 		const sameElement = selectedElement1.id == selectedElement2.id;
 
-		if (sameCard && !sameElement) {
-			resetAfterMatch(cardId);
-		} else {
+		if (sameCard && !sameElement) resetAfterMatch(cardId);
+		else {
 			frozen = true;
 
 			setTimeout(() => {

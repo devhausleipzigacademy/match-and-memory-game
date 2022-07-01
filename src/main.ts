@@ -19,6 +19,9 @@ import animalDeck from "../data/animalDeck.json";
 
 let roundsPlayed: number = 0;
 const roundBoard = document.getElementById("round-board") as HTMLElement;
+const failureSound = new Audio(
+	"https://www.dashingstrike.com/Automato/games/ATITD/sounds/fail.wav"
+);
 
 function roundCounter() {
 	roundsPlayed++;
@@ -174,10 +177,20 @@ function prepareBoard(cards) {
 			"rounded-md",
 		]) as HTMLImageElement;
 
-		back.src = card.image;
-		back.title = card.name;
+		const backImg = newElement("img", [
+			"w-full",
+			"h-full",
+			"object-cover",
+			"rounded-md",
+		]) as HTMLImageElement;
 
-		const flipCard = FlipCard([front], [back]);
+		backImg.src = card.image;
+
+		const backAudio = newElement("audio") as HTMLAudioElement;
+		backAudio.src = card.sound;
+		backImg.title = card.name;
+
+		const flipCard = FlipCard([front], [backImg, backAudio]);
 		flipCard.id = `${card.id}_${Math.floor(Math.random() * 100000)}`;
 		flipCard.title = `Card ${ind + 1}`;
 
@@ -300,6 +313,13 @@ document.addEventListener("click", (event) => {
 		selectedCards.push(currentFlipCard);
 		toggleClasses(currentFlipCard, ["flipped"]);
 
+		// grab the audio eklkenmtn aout iof the flip card
+		//  paly method to audio
+		const cardAudio = currentFlipCard.querySelector(
+			"audio"
+		) as HTMLAudioElement;
+		cardAudio.play();
+
 		if (selectedCards.length != sequenceLength) {
 			return;
 		}
@@ -316,13 +336,12 @@ document.addEventListener("click", (event) => {
 
 			setTimeout(() => {
 				frozen = false;
+				failureSound.play();
 				resetAfterNoMatch();
-			}, 1500);
+			}, 2500);
 		}
 	}
 });
-
-// eventlistener to record/change player name
 
 document.addEventListener("mouseout", (event) => {
 	const target = event.target as HTMLInputElement;
@@ -335,7 +354,6 @@ document.addEventListener("mouseout", (event) => {
 			const playerName: string = playerElement.id;
 			const playerNumber = Number(playerName.slice(-1));
 			players[playerNumber - 1].name = nameInput;
-			console.log(players);
 		}
 	}
 });

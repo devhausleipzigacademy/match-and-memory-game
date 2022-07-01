@@ -49,41 +49,25 @@ let sequenceLength = 2;
 const players: Array<Player> = [
 	{
 		id: "0000001",
-<<<<<<< HEAD
 		name: "Jane",
-=======
-		name: "Player 1",
->>>>>>> 1b349591a0a3dcf4a5f034cbe46347cbaeb9f478
 		order: 1,
 		score: 0,
 	},
 	{
 		id: "0000002",
-<<<<<<< HEAD
 		name: "Steve",
-=======
-		name: "Player 2",
->>>>>>> 1b349591a0a3dcf4a5f034cbe46347cbaeb9f478
 		order: 2,
 		score: 0,
 	},
 	{
 		id: "0000003",
-<<<<<<< HEAD
 		name: "Maxine",
-=======
-		name: "Player 3",
->>>>>>> 1b349591a0a3dcf4a5f034cbe46347cbaeb9f478
 		order: 3,
 		score: 0,
 	},
 	{
 		id: "0000004",
-<<<<<<< HEAD
 		name: "Phillip",
-=======
-		name: "Player 4",
->>>>>>> 1b349591a0a3dcf4a5f034cbe46347cbaeb9f478
 		order: 4,
 		score: 0,
 	},

@@ -10,7 +10,7 @@ import { Cards, CardMatchDict, Player } from "./types";
 
 import { FlipCard } from "./components/flip-card";
 
-import deck from "./cardDeck";
+import animalDeck from "../data/animalDeck.json";
 
 // Test area
 
@@ -134,7 +134,7 @@ function placeCards(cards: Array<HTMLElement>): void {
 	addChildren(cardGrid, cardElements);
 }
 
-const subset = deck;
+const subset = animalDeck;
 
 let cardMatchDict: CardMatchDict = {};
 
@@ -149,19 +149,7 @@ for (const card of subset) {
 const cards: Cards = [...subset, ...subset];
 shuffle(cards);
 
-const imgs = [
-	"https://images.unsplash.com/photo-1474511320723-9a56873867b5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8YW5pbWFsfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=1200&q=60",
-	"https://images.unsplash.com/photo-1484406566174-9da000fda645?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=989&q=80",
-	"https://images.unsplash.com/photo-1602491453631-e2a5ad90a131?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=927&q=80",
-	"https://images.unsplash.com/photo-1517849845537-4d257902454a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1035&q=80",
-	"https://images.unsplash.com/photo-1555169062-013468b47731?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=987&q=80",
-	"https://images.unsplash.com/photo-1437622368342-7a3d73a34c8f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1920&q=80",
-	"https://images.unsplash.com/photo-1425082661705-1834bfd09dca?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2352&q=80",
-	"https://images.unsplash.com/photo-1497752531616-c3afd9760a11?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
-	"https://images.unsplash.com/photo-1579380656108-f98e4df8ea62?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=987&q=80",
-];
-
-const flipCards = cards.map((card) => {
+const flipCards = cards.map((card, ind) => {
 	const front = newElement("span");
 
 	const back = newElement("img", [
@@ -169,13 +157,14 @@ const flipCards = cards.map((card) => {
 		"h-full",
 		"object-cover",
 		"rounded-md",
-	]);
-	console.log(card.id);
-	//@ts-ignore
-	back.src = imgs[card.id.charAt(2)];
+	]) as HTMLImageElement;
+
+	back.src = card.image;
+	back.title = card.name;
 
 	const flipCard = FlipCard([front], [back]);
 	flipCard.id = `${card.id}_${Math.floor(Math.random() * 100000)}`;
+	flipCard.title = `Card ${ind + 1}`;
 
 	return flipCard;
 });

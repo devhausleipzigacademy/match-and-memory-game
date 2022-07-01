@@ -1,8 +1,7 @@
 export type Card = {
 	id: string; // id is unique
 	name: string;
-	front: string;
-	back: string;
+	image: string;
 };
 
 export type Cards = Array<Card>;

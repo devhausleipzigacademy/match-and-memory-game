@@ -60,7 +60,7 @@ const players: Array<Player> = [
 	},
 ];
 
-function renderScores() {
+function renderScore() {
 	const playerScoreBoard = document.querySelector(
 		`#player${playerTurn + 1} .player-score`
 	) as HTMLElement;
@@ -86,7 +86,7 @@ function nextTurn() {
 
 	if (nextPlayerTurn == 0) roundCounter();
 
-	renderScores();
+	renderScore();
 
 	playerTurn = nextPlayerTurn;
 
@@ -163,7 +163,6 @@ const flipCards = cards.map((card, ind) => {
 	return flipCard;
 });
 
-renderScores();
 placeCards(flipCards);
 roundCounter();
 
@@ -176,8 +175,8 @@ let frozen: boolean = false;
 function resetAfterMatch(cardId) {
 	cardMatchDict[cardId].matched = true;
 	increaseScore();
+	renderScore();
 	selectedCards = [];
-	nextTurn();
 }
 
 function resetAfterNoMatch() {

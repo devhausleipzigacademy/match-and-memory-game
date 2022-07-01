@@ -11,6 +11,7 @@ import { Cards, CardMatchDict, Player } from "./types";
 import { FlipCard } from "./components/flip-card";
 
 import deck from "./cardDeck";
+import { Input, Stringifier } from "postcss";
 
 // Test area
 
@@ -260,5 +261,21 @@ document.addEventListener("click", (event) => {
 				resetAfterNoMatch();
 			}, 1500);
 		}
+	}
+});
+
+// eventlistener to record/change player name
+
+document.addEventListener("mouseout", (event) => {
+	const target = event.target as HTMLInputElement;
+
+	if (target.matches(".player-spot input")) {
+		const nameInput = target.value;
+
+		const playerElement = target.closest(".player-spot") as HTMLElement;
+		const playerName: string = playerElement.id;
+		const playerNumber = Number(playerName.slice(-1));
+		players[playerNumber - 1].name = nameInput;
+		console.log(players);
 	}
 });

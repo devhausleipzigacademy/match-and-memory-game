@@ -7,24 +7,16 @@ h1 {
 	color: #1730c0;
 }
 
-.player-area {
-	@apply flex flex-col justify-between gap-6 text-white font-extrabold h-5/6 w-[160px];
-}
-
 .player-spot {
-	@apply flex flex-col items-center justify-evenly h-1/2 w-full bg-slate-400 border-double border-8;
-}
-
-.player-text {
-	@apply text-black;
+	@apply flex flex-col items-center justify-evenly h-1/2 w-full font-kantumruy;
 }
 
 .player-name {
-	@apply text-red-600;
+	@apply text-slate-800;
 }
 
 .player-score {
-	@apply text-red-600;
+	@apply text-slate-800 font-bungee;
 }
 
 .active-player {

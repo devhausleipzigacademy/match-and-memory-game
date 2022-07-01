@@ -37,12 +37,7 @@ function roundCounter() {
 
 const cardGrid = document.getElementById("card-grid") as HTMLElement;
 
-const playerAreaLeft = document.getElementById(
-	"player-area-left"
-) as HTMLElement;
-const playerAreaRight = document.getElementById(
-	"player-area-right"
-) as HTMLElement;
+const playerArea = document.getElementById("player-area") as HTMLElement;
 
 let selectedCards: Array<HTMLElement> = [];
 
@@ -51,25 +46,25 @@ let sequenceLength = 2;
 const players: Array<Player> = [
 	{
 		id: "0000001",
-		name: "Example Jane",
+		name: "Jane",
 		order: 1,
 		score: 0,
 	},
 	{
 		id: "0000002",
-		name: "Example Steve",
+		name: "Steve",
 		order: 2,
 		score: 0,
 	},
 	{
 		id: "0000003",
-		name: "Example Maxine",
+		name: "Maxine",
 		order: 3,
 		score: 0,
 	},
 	{
 		id: "0000004",
-		name: "Example Phillip",
+		name: "Phillip",
 		order: 4,
 		score: 0,
 	},
@@ -117,8 +112,8 @@ function placeCards(cards: Array<HTMLElement>): void {
 		const element = newElement("div", [
 			"grid-cell",
 			"rounded-md",
-			"w-[100px]",
-			"h-[100px]",
+			"w-[170px]",
+			"h-[170px]",
 		]);
 		addChildren(element, [card]);
 		return element;
@@ -189,8 +184,7 @@ function prepareBoard(cards) {
 }
 
 function renderPlayers() {
-	removeChildren(playerAreaLeft);
-	removeChildren(playerAreaRight);
+	removeChildren(playerArea);
 
 	const playerSpots = players.map((player) => {
 		return PlayerSpot(player.order, player.name);
@@ -198,19 +192,7 @@ function renderPlayers() {
 
 	toggleClasses(playerSpots[0], ["active-player", "inactive-player"]);
 
-	const leftPlayers: typeof playerSpots = [];
-	const rightPlayers: typeof playerSpots = [];
-
-	playerSpots.forEach((player, ind) => {
-		if (ind % 2 == 0) {
-			leftPlayers.push(player);
-		} else {
-			rightPlayers.push(player);
-		}
-	});
-
-	addChildren(playerAreaLeft, leftPlayers);
-	addChildren(playerAreaRight, rightPlayers);
+	addChildren(playerArea, playerSpots);
 }
 
 function resetAfterMatch(cardId, cardMatchDict) {

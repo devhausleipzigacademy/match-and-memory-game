@@ -9,35 +9,30 @@
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link
-			href="https://fonts.googleapis.com/css2?family=Bungee+Shade&display=swap"
+			href="https://fonts.googleapis.com/css2?family=Bungee+Shade&family=Kantumruy+Pro:wght@500&display=swap"
 			rel="stylesheet"
 		/>
 	</head>
-	<body class="h-screen w-screen flex flex-col justify-center items-center">
-		<body style="background-color:#FFEBB4"></style>
-		<header class="h-[25%] font-bungee">
+	<body
+		class="h-screen w-screen flex flex-col"
+		style="background-color: #ffebb4"
+	>
+		<header class="h-[20%] font-bungee">
 			<h1 class="text-center">Match-and-Memory</h1>
 			<div class="flex justify-evenly">
-				<span
-				id="round-board"
-			></span>
-			<button
-				id="reset-button"
-				class="h-[1.5rem] rounded bg-slate-400 px-2"
-			>Reset</button>
+				<span id="round-board"></span>
+				<button id="reset-button" class="h-[1.5rem] rounded bg-slate-400 px-2">
+					Reset
+				</button>
 			</div>
 		</header>
-		<main
-			class="flex justify-evenly align-middle items-center w-full h-[75%]"
-		>
-			<div id="player-area-left" class="player-area"></div>
+		<main class="flex flex-col items-center">
+			<div id="player-area" class="flex gap-20 justify-between w-[80%]"></div>
 
 			<div
 				id="card-grid"
-				class="h-[360px] w-[660px] grid grid-cols-6 gap-2"
+				class="h-[550px] w-[1100px] grid grid-cols-6 gap-2"
 			></div>
-
-			<div id="player-area-right" class="player-area"></div>
 		</main>
 
 		<script type="module" src="main.ts"></script>

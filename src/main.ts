@@ -221,7 +221,7 @@ function resetAfterMatch(cardId, cardMatchDict) {
 
 	const allMatched = Object.entries(cardMatchDict).every((pair) => {
 		const [matched, card] = pair;
-		return matched;
+		return !matched;
 	});
 
 	if (allMatched) resetBoard();

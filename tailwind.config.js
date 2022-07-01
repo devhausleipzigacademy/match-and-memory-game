@@ -5,6 +5,7 @@ module.exports = {
 		extend: {
 			fontFamily: {
 				bungee: ["Bungee Shade"],
+				kantumruy: ["Kantumruy Pro"],
 			},
 		},
 	},

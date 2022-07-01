@@ -12,14 +12,93 @@
 			<h1 class="text-center">Match-and-Memory</h1>
 			<div
 				id="score-board"
-				class="h-5/6 w-full flex justify-around"
+				class="h-4/6 w-full flex justify-around"
+			></div>
+			<div
+				id="round-board"
+				class="h-2/6 w-full flex justify-around"
 			></div>
 		</header>
-		<main>
+		<main
+			class="flex justify-evenly align-middle items-center w-full h-full"
+		>
 			<div
+				id="player-area-left"
+				class="flex flex-col justify-between gap-1 text-white font-extrabold h-5/6 w-1/6"
+			>
+				<div
+					id="player1"
+					class="flex flex-col items-center justify-evenly h-1/2 w-full bg-slate-400 border-double border-8 border-indigo-800"
+				>
+					<div>
+						<p>Player Name:</p>
+					</div>
+					<div class="player-name"><p>test</p></div>
+					<div><p>Player Score:</p></div>
+					<div class="player-score">
+						<!-- can contain either numerical value and/or a stack of cards that they player won -->
+						<p>test</p>
+					</div>
+				</div>
+
+				<div
+					id="player2"
+					class="flex flex-col items-center justify-evenly h-1/2 w-full bg-slate-400 border-double border-8 border-indigo-800"
+				>
+					<div>
+						<p>Player Name:</p>
+					</div>
+					<div class="player-name"><p>test</p></div>
+					<div><p>Player Score:</p></div>
+					<div class="player-score">
+						<!-- can contain either numerical value and/or a stack of cards that they player won -->
+						<p>test</p>
+					</div>
+				</div>
+			</div>
+
+			<div
+				id="player-area-right"
+				class="flex flex-col order-3 justify-between gap-1 text-white font-extrabold h-5/6 w-1/6"
+			>
+				<div
+					id="player3"
+					class="flex flex-col items-center justify-evenly h-1/2 w-full bg-slate-400 border-double border-8 border-indigo-800"
+				>
+					<div>
+						<p>Player Name:</p>
+					</div>
+					<div class="player-name"><p>test</p></div>
+					<div><p>Player Score:</p></div>
+					<div class="player-score">
+						<!-- can contain either numerical value and/or a stack of cards that they player won -->
+						<p>test</p>
+					</div>
+				</div>
+
+				<div
+					id="player4"
+					class="flex flex-col items-center justify-evenly h-1/2 w-full bg-slate-400 border-double border-8 border-indigo-800"
+				>
+					<div>
+						<p>Player Name:</p>
+					</div>
+					<div class="player-name"><p>test</p></div>
+					<div><p>Player Score:</p></div>
+					<div class="player-score">
+						<!-- can contain either numerical value and/or a stack of cards that they player won -->
+						<p>test</p>
+					</div>
+				</div>
+			</div>
+
+			<div
+				style="height: 420px; width: 580px"
 				id="card-grid"
 				class="h-full w-full grid grid-cols-6 gap-6"
 			></div>
+
+			<div id="player-area-right"></div>
 		</main>
 
 		<script type="module" src="main.ts"></script>

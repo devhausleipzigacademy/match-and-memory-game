@@ -12,6 +12,25 @@ import { FlipCard } from "./components/flip-card";
 
 import deck from "./cardDeck";
 
+// Test area
+
+// Round Counter
+
+let roundsPlayed: number = 0;
+const roundBoard = document.getElementById("round-board") as HTMLElement;
+
+function roundCounter() {
+	roundsPlayed++;
+	console.log(roundsPlayed);
+
+	removeChildren(roundBoard);
+	const element: HTMLElement = newElement("div");
+	element.innerHTML = `Round: ${roundsPlayed}`;
+
+	addChildren(roundBoard, [element]);
+	// check if all players have had a turn and if so increase RoundCounter
+}
+
 //////////////////////////////////////////
 /// Prepare Game Board & Initial State ///
 //////////////////////////////////////////
@@ -31,31 +50,59 @@ const players: Array<Player> = [
 		name: "Player 2",
 		score: 0,
 	},
+	{
+		name: "Player 3",
+		score: 0,
+	},
+	{
+		name: "Player 4",
+		score: 0,
+	},
 ];
 
-const scoreBoard = document.getElementById("score-board") as HTMLElement;
-
 function renderScores() {
-	removeChildren(scoreBoard);
+	const playerScoreBoard = document.querySelector(
+		`#player${playerTurn + 1} .player-score`
+	) as HTMLElement;
 
-	const scoreElements: Array<HTMLElement> = players.map((player, index) => {
-		const element = newElement("div");
-		if (index == playerTurn) {
-			element.innerHTML = `<mark>${player.name}: ${player.score}</mark>`;
-		} else {
-			element.innerHTML = `${player.name}: ${player.score}`;
-		}
-		return element;
-	});
+	console.log("render scores func called");
 
-	addChildren(scoreBoard, scoreElements);
+	removeChildren(playerScoreBoard);
+	const scoreElement = newElement("p");
+
+	const activePlayer = players[playerTurn];
+	console.log(activePlayer);
+
+	scoreElement.innerHTML = `${players[playerTurn].score}`;
+
+	addChildren(playerScoreBoard, [scoreElement]);
 }
 
 let playerTurn: number = 0;
 
 function nextTurn() {
-	playerTurn = (playerTurn + 1) % players.length;
+	const prevPlayerTurn: number = playerTurn;
+	const nextPlayerTurn: number = (playerTurn + 1) % players.length;
+	if (nextPlayerTurn == 0) roundCounter();
+	playerTurn = nextPlayerTurn;
 	renderScores();
+	console.log("next turn func called");
+
+	// change color of player's container indicating who's turn it is
+	const prevPlayerElement = document.querySelector(
+		`#player${prevPlayerTurn + 1}`
+	) as HTMLElement;
+	const nextPlayerElement = document.getElementById(
+		`player${nextPlayerTurn + 1}`
+	) as HTMLElement;
+	toggleClasses(prevPlayerElement, [
+		"border-indigo-800",
+		"border-yellow-400",
+	]);
+	toggleClasses(nextPlayerElement, [
+		"border-indigo-800",
+		"border-yellow-400",
+	]);
 }
 
 function increaseScore() {
@@ -129,6 +176,11 @@ const flipCards = cards.map((card) => {
 
 renderScores();
 placeCards(flipCards);
+roundCounter();
+
+// this could later move to initiate game state function
+const firstPlayer = document.querySelector(`#player1`) as HTMLElement;
+toggleClasses(firstPlayer, ["border-indigo-800", "border-yellow-400"]);
 
 let frozen: boolean = false;
 

@@ -22,10 +22,9 @@ const roundBoard = document.getElementById("round-board") as HTMLElement;
 
 function roundCounter() {
 	roundsPlayed++;
-	console.log(roundsPlayed);
 
 	removeChildren(roundBoard);
-	const element: HTMLElement = newElement("div");
+	const element = newElement("div");
 	element.innerHTML = `Round: ${roundsPlayed}`;
 
 	addChildren(roundBoard, [element]);
@@ -72,12 +71,6 @@ const players: Array<Player> = [
 		id: "0000004",
 		name: "Example Phillip",
 		order: 4,
-		score: 0,
-	},
-	{
-		id: "0000005",
-		name: "Example Phillip",
-		order: 5,
 		score: 0,
 	},
 ];

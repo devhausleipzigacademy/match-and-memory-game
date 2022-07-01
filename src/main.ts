@@ -51,23 +51,33 @@ let sequenceLength = 2;
 
 const players: Array<Player> = [
 	{
+		id: "0000001",
 		name: "Example Jane",
 		order: 1,
 		score: 0,
 	},
 	{
+		id: "0000002",
 		name: "Example Steve",
 		order: 2,
 		score: 0,
 	},
 	{
+		id: "0000003",
 		name: "Example Maxine",
 		order: 3,
 		score: 0,
 	},
 	{
+		id: "0000004",
 		name: "Example Phillip",
 		order: 4,
+		score: 0,
+	},
+	{
+		id: "0000005",
+		name: "Example Phillip",
+		order: 5,
 		score: 0,
 	},
 ];
@@ -219,6 +229,13 @@ function resetAfterMatch(cardId, cardMatchDict) {
 	increaseScore();
 	renderScore();
 	selectedCards = [];
+
+	const allMatched = Object.entries(cardMatchDict).every((pair) => {
+		const [matched, card] = pair;
+		return matched;
+	});
+
+	if (allMatched) resetBoard();
 }
 
 function resetAfterNoMatch() {
@@ -242,12 +259,7 @@ let matchPredicate = binaryIdMatch;
 
 let frozen: boolean = false;
 
-///////////////////////
-/// Event Listeners ///
-///////////////////////
-
-const resetButton = document.getElementById("reset-button") as HTMLElement;
-resetButton.addEventListener("click", (event) => {
+function resetBoard() {
 	roundsPlayed = 0;
 	playerTurn = 0;
 
@@ -256,6 +268,15 @@ resetButton.addEventListener("click", (event) => {
 	removeChildren(cardGrid);
 	const cards = prepareDeck(animalDeck);
 	prepareBoard(cards);
+}
+
+///////////////////////
+/// Event Listeners ///
+///////////////////////
+
+const resetButton = document.getElementById("reset-button") as HTMLElement;
+resetButton.addEventListener("click", (event) => {
+	resetBoard();
 });
 
 document.addEventListener("click", (event) => {

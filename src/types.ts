@@ -2,6 +2,7 @@ export type Card = {
 	id: string; // id is unique
 	name: string;
 	image: string;
+	sound: string;
 };
 
 export type Cards = Array<Card>;

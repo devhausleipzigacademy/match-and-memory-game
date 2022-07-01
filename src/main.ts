@@ -19,6 +19,9 @@ import animalDeck from "../data/animalDeck.json";
 
 let roundsPlayed: number = 0;
 const roundBoard = document.getElementById("round-board") as HTMLElement;
+const failureSound = new Audio(
+	"https://www.dashingstrike.com/Automato/games/ATITD/sounds/fail.wav"
+);
 
 function roundCounter() {
 	roundsPlayed++;
@@ -46,25 +49,41 @@ let sequenceLength = 2;
 const players: Array<Player> = [
 	{
 		id: "0000001",
+<<<<<<< HEAD
 		name: "Jane",
+=======
+		name: "Player 1",
+>>>>>>> 1b349591a0a3dcf4a5f034cbe46347cbaeb9f478
 		order: 1,
 		score: 0,
 	},
 	{
 		id: "0000002",
+<<<<<<< HEAD
 		name: "Steve",
+=======
+		name: "Player 2",
+>>>>>>> 1b349591a0a3dcf4a5f034cbe46347cbaeb9f478
 		order: 2,
 		score: 0,
 	},
 	{
 		id: "0000003",
+<<<<<<< HEAD
 		name: "Maxine",
+=======
+		name: "Player 3",
+>>>>>>> 1b349591a0a3dcf4a5f034cbe46347cbaeb9f478
 		order: 3,
 		score: 0,
 	},
 	{
 		id: "0000004",
+<<<<<<< HEAD
 		name: "Phillip",
+=======
+		name: "Player 4",
+>>>>>>> 1b349591a0a3dcf4a5f034cbe46347cbaeb9f478
 		order: 4,
 		score: 0,
 	},
@@ -169,10 +188,20 @@ function prepareBoard(cards) {
 			"rounded-md",
 		]) as HTMLImageElement;
 
-		back.src = card.image;
-		back.title = card.name;
+		const backImg = newElement("img", [
+			"w-full",
+			"h-full",
+			"object-cover",
+			"rounded-md",
+		]) as HTMLImageElement;
 
-		const flipCard = FlipCard([front], [back]);
+		backImg.src = card.image;
+
+		const backAudio = newElement("audio") as HTMLAudioElement;
+		backAudio.src = card.sound;
+		backImg.title = card.name;
+
+		const flipCard = FlipCard([front], [backImg, backAudio]);
 		flipCard.id = `${card.id}_${Math.floor(Math.random() * 100000)}`;
 		flipCard.title = `Card ${ind + 1}`;
 
@@ -282,6 +311,13 @@ document.addEventListener("click", (event) => {
 		selectedCards.push(currentFlipCard);
 		toggleClasses(currentFlipCard, ["flipped"]);
 
+		// grab the audio eklkenmtn aout iof the flip card
+		//  paly method to audio
+		const cardAudio = currentFlipCard.querySelector(
+			"audio"
+		) as HTMLAudioElement;
+		cardAudio.play();
+
 		if (selectedCards.length != sequenceLength) {
 			return;
 		}
@@ -298,8 +334,24 @@ document.addEventListener("click", (event) => {
 
 			setTimeout(() => {
 				frozen = false;
+				failureSound.play();
 				resetAfterNoMatch();
-			}, 1500);
+			}, 2500);
+		}
+	}
+});
+
+document.addEventListener("mouseout", (event) => {
+	const target = event.target as HTMLInputElement;
+
+	if (target.matches(".player-spot input")) {
+		if (target.value !== "") {
+			const nameInput = target.value;
+
+			const playerElement = target.closest(".player-spot") as HTMLElement;
+			const playerName: string = playerElement.id;
+			const playerNumber = Number(playerName.slice(-1));
+			players[playerNumber - 1].name = nameInput;
 		}
 	}
 });

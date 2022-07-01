@@ -18,6 +18,9 @@ import animalDeck from "../data/animalDeck.json";
 
 let roundsPlayed: number = 0;
 const roundBoard = document.getElementById("round-board") as HTMLElement;
+const failureSound = new Audio(
+	"https://www.dashingstrike.com/Automato/games/ATITD/sounds/fail.wav"
+);
 
 function roundCounter() {
 	roundsPlayed++;
@@ -146,17 +149,23 @@ shuffle(cards);
 const flipCards = cards.map((card, ind) => {
 	const front = newElement("span");
 
-	const back = newElement("img", [
+	const backImg = newElement("img", [
 		"w-full",
 		"h-full",
 		"object-cover",
 		"rounded-md",
 	]) as HTMLImageElement;
 
-	back.src = card.image;
-	back.title = card.name;
+	backImg.src = card.image;
 
-	const flipCard = FlipCard([front], [back]);
+	const backAudio = newElement("audio") as HTMLAudioElement;
+	backAudio.src = card.sound;
+
+	// backAudio.volume == 0.8;
+
+	backImg.title = card.name;
+
+	const flipCard = FlipCard([front], [backImg, backAudio]);
 	flipCard.id = `${card.id}_${Math.floor(Math.random() * 100000)}`;
 	flipCard.title = `Card ${ind + 1}`;
 
@@ -229,6 +238,13 @@ document.addEventListener("click", (event) => {
 		selectedCards.push(currentFlipCard);
 		toggleClasses(currentFlipCard, ["flipped"]);
 
+		// grab the audio eklkenmtn aout iof the flip card
+		//  paly method to audio
+		const cardAudio = currentFlipCard.querySelector(
+			"audio"
+		) as HTMLAudioElement;
+		cardAudio.play();
+
 		if (selectedCards.length != sequenceLength) {
 			return;
 		}
@@ -245,8 +261,26 @@ document.addEventListener("click", (event) => {
 
 			setTimeout(() => {
 				frozen = false;
+				failureSound.play();
 				resetAfterNoMatch();
-			}, 1500);
+			}, 2500);
 		}
 	}
 });
+
+//    ******* frog  tiger parrot  hamster  turtle buck  dog fox
+// racoon : http://www.degus.com/sounds/babyraccoons2.wav
+
+// fox: https://www.flagislandwebcam.com/animalsounds/foxsquall.wav
+
+// tiger : https://www.healthfreedomusa.org/downloads/iMovie.app/Contents/Resources/iMovie%20%2708%20Sound%20Effects/Tiger%20Roar.mp3
+
+// parrot : http://www.parrotspeech.com/media/TrackD211T12_FBPUFT3.wav
+
+// hamsteer :https://instantrimshot.com/audio/heehaw.mp3
+
+// frog :http://thecyberbuddy.com/sounds/frog.wav
+
+// dog : https://www.animal-sounds.org/farm/Dog%20bark%20animals079.wav
+
+//  buck : http://wideworldofhunting.com/soundsofwhitetail/nonagressive/bawl98kb.wav

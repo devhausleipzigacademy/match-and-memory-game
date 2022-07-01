@@ -100,15 +100,9 @@ function nextTurn() {
 
 	console.log(prevPlayerElement, nextPlayerElement);
 
-	toggleClasses(prevPlayerElement, [
-		"border-indigo-800",
-		"border-yellow-400",
-	]);
+	toggleClasses(prevPlayerElement, ["active-player", "inactive-player"]);
 
-	toggleClasses(nextPlayerElement, [
-		"border-indigo-800",
-		"border-yellow-400",
-	]);
+	toggleClasses(nextPlayerElement, ["active-player", "inactive-player"]);
 }
 
 function increaseScore() {
@@ -175,7 +169,7 @@ roundCounter();
 
 // this could later move to initiate game state function
 const firstPlayer = document.querySelector(`#player1`) as HTMLElement;
-toggleClasses(firstPlayer, ["border-indigo-800", "border-yellow-400"]);
+toggleClasses(firstPlayer, ["active-player", "inactive-player"]);
 
 let frozen: boolean = false;
 

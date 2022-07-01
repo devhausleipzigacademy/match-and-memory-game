@@ -10,20 +10,11 @@
 	<body class="h-screen w-screen flex flex-col justify-center items-center">
 		<header class="h-1/6">
 			<h1 class="text-center">Match-and-Memory</h1>
-			<div
-				id="score-board"
-				class="h-4/6 w-full flex justify-around"
-			></div>
-			<div
-				id="round-board"
-				class="h-2/6 w-full flex justify-around"
-			></div>
+			<div id="round-board" class="h-2/6 w-full flex justify-around"></div>
 		</header>
-		<main
-			class="flex justify-evenly align-middle items-center w-full h-full"
-		>
+		<main class="flex justify-evenly align-middle items-center w-full h-full">
 			<div id="player-area-left" class="player-area">
-				<div id="player1" class="player-spot">
+				<div id="player1" class="player-spot inactive-player">
 					<div>
 						<p>Player Name:</p>
 					</div>
@@ -35,7 +26,7 @@
 					</div>
 				</div>
 
-				<div id="player2" class="player-spot">
+				<div id="player2" class="player-spot inactive-player">
 					<div>
 						<p>Player Name:</p>
 					</div>
@@ -49,7 +40,7 @@
 			</div>
 
 			<div id="player-area-right" class="player-area order-1">
-				<div id="player3" class="player-spot">
+				<div id="player3" class="player-spot inactive-player">
 					<div>
 						<p>Player Name:</p>
 					</div>
@@ -61,7 +52,7 @@
 					</div>
 				</div>
 
-				<div id="player4" class="player-spot">
+				<div id="player4" class="player-spot inactive-player">
 					<div>
 						<p>Player Name:</p>
 					</div>

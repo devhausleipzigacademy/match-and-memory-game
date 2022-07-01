@@ -7,7 +7,15 @@
 }
 
 .player-spot {
-	@apply flex flex-col items-center justify-evenly h-1/2 w-full bg-slate-400 border-double border-8 border-indigo-800;
+	@apply flex flex-col items-center justify-evenly h-1/2 w-full bg-slate-400 border-double border-8;
+}
+
+.active-player {
+	@apply border-yellow-400;
+}
+
+.inactive-player {
+	@apply border-indigo-800;
 }
 
 .flip-box {

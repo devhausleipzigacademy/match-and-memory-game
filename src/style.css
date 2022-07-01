@@ -2,12 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
+h1 {
+	font-size: 55px;
+	color: #1730c0;
+}
+
 .player-area {
 	@apply flex flex-col justify-between gap-6 text-white font-extrabold h-5/6 w-[160px];
 }
 
 .player-spot {
 	@apply flex flex-col items-center justify-evenly h-1/2 w-full bg-slate-400 border-double border-8;
+}
+
+.player-text {
+	@apply text-black;
+}
+
+.player-name {
+	@apply text-red-600;
+}
+
+.player-score {
+	@apply text-red-600;
 }
 
 .active-player {
@@ -46,7 +63,7 @@
 .flip-box-back {
 	backface-visibility: hidden;
 	border-radius: 0.375rem;
-	@apply absolute top-0 left-0 w-full h-full;
+	@apply absolute top-0 left-0 w-full h-full shadow-md;
 }
 
 /* Style the front side (fallback if image is missing) */

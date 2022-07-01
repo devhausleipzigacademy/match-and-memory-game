@@ -2,7 +2,12 @@
 module.exports = {
 	content: ["./src/**/*.{js,ts,html}"],
 	theme: {
-		extend: {},
+		extend: {
+			fontFamily: {
+				bungee: ["Bungee Shade"],
+			},
+		},
 	},
+	variants: {},
 	plugins: [],
 };

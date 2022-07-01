@@ -83,10 +83,12 @@ let playerTurn: number = 0;
 function nextTurn() {
 	const prevPlayerTurn: number = playerTurn;
 	const nextPlayerTurn: number = (playerTurn + 1) % players.length;
+
 	if (nextPlayerTurn == 0) roundCounter();
-	playerTurn = nextPlayerTurn;
+
 	renderScores();
-	console.log("next turn func called");
+
+	playerTurn = nextPlayerTurn;
 
 	// change color of player's container indicating who's turn it is
 	const prevPlayerElement = document.querySelector(
@@ -95,10 +97,14 @@ function nextTurn() {
 	const nextPlayerElement = document.getElementById(
 		`player${nextPlayerTurn + 1}`
 	) as HTMLElement;
+
+	console.log(prevPlayerElement, nextPlayerElement);
+
 	toggleClasses(prevPlayerElement, [
 		"border-indigo-800",
 		"border-yellow-400",
 	]);
+
 	toggleClasses(nextPlayerElement, [
 		"border-indigo-800",
 		"border-yellow-400",
@@ -116,8 +122,8 @@ function placeCards(cards: Array<HTMLElement>): void {
 			"bg-blue-400",
 			"rounded-md",
 			"shadow-md",
-			"w-32",
-			"h-32",
+			"w-[100px]",
+			"h-[100px]",
 			"border",
 			"border-slate-700",
 		]);

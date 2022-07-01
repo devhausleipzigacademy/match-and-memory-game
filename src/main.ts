@@ -9,6 +9,7 @@ import {
 import { Cards, CardMatchDict, Player } from "./types";
 
 import { FlipCard } from "./components/flip-card";
+import { PlayerSpot } from "./components/player-spot";
 
 import animalDeck from "../data/animalDeck.json";
 
@@ -24,10 +25,9 @@ const failureSound = new Audio(
 
 function roundCounter() {
 	roundsPlayed++;
-	console.log(roundsPlayed);
 
 	removeChildren(roundBoard);
-	const element: HTMLElement = newElement("div");
+	const element = newElement("div");
 	element.innerHTML = `Round: ${roundsPlayed}`;
 
 	addChildren(roundBoard, [element]);
@@ -40,45 +40,50 @@ function roundCounter() {
 
 const cardGrid = document.getElementById("card-grid") as HTMLElement;
 
+const playerAreaLeft = document.getElementById(
+	"player-area-left"
+) as HTMLElement;
+const playerAreaRight = document.getElementById(
+	"player-area-right"
+) as HTMLElement;
+
 let selectedCards: Array<HTMLElement> = [];
 
 let sequenceLength = 2;
 
 const players: Array<Player> = [
 	{
-		name: "Player 1",
+		id: "0000001",
+		name: "Example Jane",
+		order: 1,
 		score: 0,
 	},
 	{
-		name: "Player 2",
+		id: "0000002",
+		name: "Example Steve",
+		order: 2,
 		score: 0,
 	},
 	{
-		name: "Player 3",
+		id: "0000003",
+		name: "Example Maxine",
+		order: 3,
 		score: 0,
 	},
 	{
-		name: "Player 4",
+		id: "0000004",
+		name: "Example Phillip",
+		order: 4,
 		score: 0,
 	},
 ];
 
 function renderScore() {
-	const playerScoreBoard = document.querySelector(
-		`#player${playerTurn + 1} .player-score`
+	const scoreElement = document.querySelector(
+		`#player-${playerTurn + 1} .player-score`
 	) as HTMLElement;
 
-	console.log("render scores func called");
-
-	removeChildren(playerScoreBoard);
-	const scoreElement = newElement("p");
-
-	const activePlayer = players[playerTurn];
-	console.log(activePlayer);
-
-	scoreElement.innerHTML = `${players[playerTurn].score}`;
-
-	addChildren(playerScoreBoard, [scoreElement]);
+	scoreElement.innerText = `${players[playerTurn].score}`;
 }
 
 let playerTurn: number = 0;
@@ -95,13 +100,11 @@ function nextTurn() {
 
 	// change color of player's container indicating who's turn it is
 	const prevPlayerElement = document.querySelector(
-		`#player${prevPlayerTurn + 1}`
+		`#player-${prevPlayerTurn + 1}`
 	) as HTMLElement;
 	const nextPlayerElement = document.getElementById(
-		`player${nextPlayerTurn + 1}`
+		`player-${nextPlayerTurn + 1}`
 	) as HTMLElement;
-
-	console.log(prevPlayerElement, nextPlayerElement);
 
 	toggleClasses(prevPlayerElement, ["active-player", "inactive-player"]);
 
@@ -116,13 +119,9 @@ function placeCards(cards: Array<HTMLElement>): void {
 	const cardElements = cards.map((card) => {
 		const element = newElement("div", [
 			"grid-cell",
-			"bg-blue-400",
 			"rounded-md",
-			"shadow-md",
 			"w-[100px]",
 			"h-[100px]",
-			"border",
-			"border-slate-700",
 		]);
 		addChildren(element, [card]);
 		return element;
@@ -131,61 +130,114 @@ function placeCards(cards: Array<HTMLElement>): void {
 	addChildren(cardGrid, cardElements);
 }
 
-const subset = animalDeck;
-
-let cardMatchDict: CardMatchDict = {};
-
-for (const card of subset) {
-	const id = card.id;
-	cardMatchDict[id] = {
-		matched: false,
-		card: card,
-	};
+function useState<T>(startValue: T): [() => T, (val: T) => T] {
+	let state = startValue;
+	return [
+		() => {
+			return state;
+		},
+		(val) => {
+			state = val;
+			return state;
+		},
+	];
 }
 
-const cards: Cards = [...subset, ...subset];
-shuffle(cards);
+const [getMatchDict, setMatchDict] = useState({} as CardMatchDict);
 
-const flipCards = cards.map((card, ind) => {
-	const front = newElement("span");
+function prepareDeck(deck) {
+	const subset = deck; // use full deck for now; take subset later to accomodate larger decks.
 
-	const backImg = newElement("img", [
-		"w-full",
-		"h-full",
-		"object-cover",
-		"rounded-md",
-	]) as HTMLImageElement;
+	const newMatchDict = {};
 
-	backImg.src = card.image;
+	for (const card of subset) {
+		const id = card.id;
+		newMatchDict[id] = {
+			matched: false,
+			card: card,
+		};
+	}
 
-	const backAudio = newElement("audio") as HTMLAudioElement;
-	backAudio.src = card.sound;
+	setMatchDict(newMatchDict);
 
-	// backAudio.volume == 0.8;
+	const cards: Cards = [...subset, ...subset];
+	shuffle(cards);
 
-	backImg.title = card.name;
+	return cards;
+}
 
-	const flipCard = FlipCard([front], [backImg, backAudio]);
-	flipCard.id = `${card.id}_${Math.floor(Math.random() * 100000)}`;
-	flipCard.title = `Card ${ind + 1}`;
+function prepareBoard(cards) {
+	const flipCards = cards.map((card, ind) => {
+		const front = newElement("span");
 
-	return flipCard;
-});
+		const back = newElement("img", [
+			"w-full",
+			"h-full",
+			"object-cover",
+			"rounded-md",
+		]) as HTMLImageElement;
 
-placeCards(flipCards);
-roundCounter();
+		const backImg = newElement("img", [
+			"w-full",
+			"h-full",
+			"object-cover",
+			"rounded-md",
+		]) as HTMLImageElement;
 
-// this could later move to initiate game state function
-const firstPlayer = document.querySelector(`#player1`) as HTMLElement;
-toggleClasses(firstPlayer, ["active-player", "inactive-player"]);
+		backImg.src = card.image;
 
-let frozen: boolean = false;
+		const backAudio = newElement("audio") as HTMLAudioElement;
+		backAudio.src = card.sound;
+		backImg.title = card.name;
 
-function resetAfterMatch(cardId) {
+		const flipCard = FlipCard([front], [backImg, backAudio]);
+		flipCard.id = `${card.id}_${Math.floor(Math.random() * 100000)}`;
+		flipCard.title = `Card ${ind + 1}`;
+
+		return flipCard;
+	});
+
+	placeCards(flipCards);
+	roundCounter();
+}
+
+function renderPlayers() {
+	removeChildren(playerAreaLeft);
+	removeChildren(playerAreaRight);
+
+	const playerSpots = players.map((player) => {
+		return PlayerSpot(player.order, player.name);
+	});
+
+	toggleClasses(playerSpots[0], ["active-player", "inactive-player"]);
+
+	const leftPlayers: typeof playerSpots = [];
+	const rightPlayers: typeof playerSpots = [];
+
+	playerSpots.forEach((player, ind) => {
+		if (ind % 2 == 0) {
+			leftPlayers.push(player);
+		} else {
+			rightPlayers.push(player);
+		}
+	});
+
+	addChildren(playerAreaLeft, leftPlayers);
+	addChildren(playerAreaRight, rightPlayers);
+}
+
+function resetAfterMatch(cardId, cardMatchDict) {
 	cardMatchDict[cardId].matched = true;
 	increaseScore();
 	renderScore();
 	selectedCards = [];
+
+	const allMatched = Object.entries(cardMatchDict).every((pair) => {
+		const [matched, card] = pair;
+		return !matched;
+	});
+
+	if (allMatched) resetBoard();
 }
 
 function resetAfterNoMatch() {
@@ -201,11 +253,33 @@ function binaryIdMatch(ids: Array<string>) {
 	return ids[0] == ids[1];
 }
 
+const cards = prepareDeck(animalDeck);
+prepareBoard(cards);
+renderPlayers();
+
 let matchPredicate = binaryIdMatch;
+
+let frozen: boolean = false;
+
+function resetBoard() {
+	roundsPlayed = 0;
+	playerTurn = 0;
+
+	renderPlayers();
+
+	removeChildren(cardGrid);
+	const cards = prepareDeck(animalDeck);
+	prepareBoard(cards);
+}
 
 ///////////////////////
 /// Event Listeners ///
 ///////////////////////
+
+const resetButton = document.getElementById("reset-button") as HTMLElement;
+resetButton.addEventListener("click", (event) => {
+	resetBoard();
+});
 
 document.addEventListener("click", (event) => {
 	if (frozen == true) {
@@ -219,6 +293,7 @@ document.addEventListener("click", (event) => {
 
 		const currentCardId = currentFlipCard.id.split("_")[0];
 
+		const cardMatchDict = getMatchDict();
 		const { matched } = cardMatchDict[currentCardId];
 
 		const ongoingSelection = !matched && selectedCards.length < 2;
@@ -255,7 +330,7 @@ document.addEventListener("click", (event) => {
 
 		const match = matchPredicate(cardIds);
 
-		if (match) resetAfterMatch(currentCardId);
+		if (match) resetAfterMatch(currentCardId, cardMatchDict);
 		else {
 			frozen = true;
 
@@ -268,19 +343,16 @@ document.addEventListener("click", (event) => {
 	}
 });
 
-//    ******* frog  tiger parrot  hamster  turtle buck  dog fox
-// racoon : http://www.degus.com/sounds/babyraccoons2.wav
+document.addEventListener("mouseout", (event) => {
+	const target = event.target as HTMLInputElement;
 
-// fox: https://www.flagislandwebcam.com/animalsounds/foxsquall.wav
+	if (target.matches(".player-spot input")) {
+		const nameInput = target.value;
 
-// tiger : https://www.healthfreedomusa.org/downloads/iMovie.app/Contents/Resources/iMovie%20%2708%20Sound%20Effects/Tiger%20Roar.mp3
-
-// parrot : http://www.parrotspeech.com/media/TrackD211T12_FBPUFT3.wav
-
-// hamsteer :https://instantrimshot.com/audio/heehaw.mp3
-
-// frog :http://thecyberbuddy.com/sounds/frog.wav
-
-// dog : https://www.animal-sounds.org/farm/Dog%20bark%20animals079.wav
-
-//  buck : http://wideworldofhunting.com/soundsofwhitetail/nonagressive/bawl98kb.wav
+		const playerElement = target.closest(".player-spot") as HTMLElement;
+		const playerName: string = playerElement.id;
+		const playerNumber = Number(playerName.slice(-1));
+		players[playerNumber - 1].name = nameInput;
+		console.log(players);
+	}
+});

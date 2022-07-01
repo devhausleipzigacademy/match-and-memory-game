@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+h1 {
+	font-size: 55px;
+	color: #1730c0;
+}
+
 .player-area {
 	@apply flex flex-col justify-between gap-6 text-white font-extrabold h-5/6 w-[160px];
 }
@@ -10,12 +15,28 @@
 	@apply flex flex-col items-center justify-evenly h-1/2 w-full bg-slate-400 border-double border-8;
 }
 
+.player-text {
+	@apply text-black;
+}
+
+.player-name {
+	@apply text-red-600;
+}
+
+.player-score {
+	@apply text-red-600;
+}
+
 .active-player {
 	@apply border-yellow-400;
 }
 
 .inactive-player {
 	@apply border-indigo-800;
+}
+
+.input-styling {
+	@apply w-5/6 appearance-none rounded-md placeholder-white bg-slate-400 text-center hover:bg-slate-500 focus:placeholder-transparent focus:outline-none;
 }
 
 .flip-box {
@@ -42,7 +63,7 @@
 .flip-box-back {
 	backface-visibility: hidden;
 	border-radius: 0.375rem;
-	@apply absolute top-0 left-0 w-full h-full;
+	@apply absolute top-0 left-0 w-full h-full shadow-md;
 }
 
 /* Style the front side (fallback if image is missing) */

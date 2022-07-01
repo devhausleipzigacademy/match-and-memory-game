@@ -9,6 +9,7 @@ import {
 import { Cards, CardMatchDict, Player } from "./types";
 
 import { FlipCard } from "./components/flip-card";
+import { PlayerSpot } from "./components/player-spot";
 
 import animalDeck from "../data/animalDeck.json";
 
@@ -37,45 +38,46 @@ function roundCounter() {
 
 const cardGrid = document.getElementById("card-grid") as HTMLElement;
 
+const playerAreaLeft = document.getElementById(
+	"player-area-left"
+) as HTMLElement;
+const playerAreaRight = document.getElementById(
+	"player-area-right"
+) as HTMLElement;
+
 let selectedCards: Array<HTMLElement> = [];
 
 let sequenceLength = 2;
 
 const players: Array<Player> = [
 	{
-		name: "Player 1",
+		name: "Example Jane",
+		order: 1,
 		score: 0,
 	},
 	{
-		name: "Player 2",
+		name: "Example Steve",
+		order: 2,
 		score: 0,
 	},
 	{
-		name: "Player 3",
+		name: "Example Maxine",
+		order: 3,
 		score: 0,
 	},
 	{
-		name: "Player 4",
+		name: "Example Phillip",
+		order: 4,
 		score: 0,
 	},
 ];
 
 function renderScore() {
-	const playerScoreBoard = document.querySelector(
-		`#player${playerTurn + 1} .player-score`
+	const scoreElement = document.querySelector(
+		`#player-${playerTurn + 1} .player-score`
 	) as HTMLElement;
 
-	console.log("render scores func called");
-
-	removeChildren(playerScoreBoard);
-	const scoreElement = newElement("p");
-
-	const activePlayer = players[playerTurn];
-	console.log(activePlayer);
-
-	scoreElement.innerHTML = `${players[playerTurn].score}`;
-
-	addChildren(playerScoreBoard, [scoreElement]);
+	scoreElement.innerText = `${players[playerTurn].score}`;
 }
 
 let playerTurn: number = 0;
@@ -92,13 +94,11 @@ function nextTurn() {
 
 	// change color of player's container indicating who's turn it is
 	const prevPlayerElement = document.querySelector(
-		`#player${prevPlayerTurn + 1}`
+		`#player-${prevPlayerTurn + 1}`
 	) as HTMLElement;
 	const nextPlayerElement = document.getElementById(
-		`player${nextPlayerTurn + 1}`
+		`player-${nextPlayerTurn + 1}`
 	) as HTMLElement;
-
-	console.log(prevPlayerElement, nextPlayerElement);
 
 	toggleClasses(prevPlayerElement, ["active-player", "inactive-player"]);
 
@@ -124,51 +124,93 @@ function placeCards(cards: Array<HTMLElement>): void {
 	addChildren(cardGrid, cardElements);
 }
 
-const subset = animalDeck;
-
-let cardMatchDict: CardMatchDict = {};
-
-for (const card of subset) {
-	const id = card.id;
-	cardMatchDict[id] = {
-		matched: false,
-		card: card,
-	};
+function useState<T>(startValue: T): [() => T, (val: T) => T] {
+	let state = startValue;
+	return [
+		() => {
+			return state;
+		},
+		(val) => {
+			state = val;
+			return state;
+		},
+	];
 }
 
-const cards: Cards = [...subset, ...subset];
-shuffle(cards);
+const [getMatchDict, setMatchDict] = useState({} as CardMatchDict);
 
-const flipCards = cards.map((card, ind) => {
-	const front = newElement("span");
+function prepareDeck(deck) {
+	const subset = deck; // use full deck for now; take subset later to accomodate larger decks.
 
-	const back = newElement("img", [
-		"w-full",
-		"h-full",
-		"object-cover",
-		"rounded-md",
-	]) as HTMLImageElement;
+	const newMatchDict = {};
 
-	back.src = card.image;
-	back.title = card.name;
+	for (const card of subset) {
+		const id = card.id;
+		newMatchDict[id] = {
+			matched: false,
+			card: card,
+		};
+	}
 
-	const flipCard = FlipCard([front], [back]);
-	flipCard.id = `${card.id}_${Math.floor(Math.random() * 100000)}`;
-	flipCard.title = `Card ${ind + 1}`;
+	setMatchDict(newMatchDict);
 
-	return flipCard;
-});
+	const cards: Cards = [...subset, ...subset];
+	shuffle(cards);
 
-placeCards(flipCards);
-roundCounter();
+	return cards;
+}
 
-// this could later move to initiate game state function
-const firstPlayer = document.querySelector(`#player1`) as HTMLElement;
-toggleClasses(firstPlayer, ["active-player", "inactive-player"]);
+function prepareBoard(cards) {
+	const flipCards = cards.map((card, ind) => {
+		const front = newElement("span");
 
-let frozen: boolean = false;
+		const back = newElement("img", [
+			"w-full",
+			"h-full",
+			"object-cover",
+			"rounded-md",
+		]) as HTMLImageElement;
 
-function resetAfterMatch(cardId) {
+		back.src = card.image;
+		back.title = card.name;
+
+		const flipCard = FlipCard([front], [back]);
+		flipCard.id = `${card.id}_${Math.floor(Math.random() * 100000)}`;
+		flipCard.title = `Card ${ind + 1}`;
+
+		return flipCard;
+	});
+
+	placeCards(flipCards);
+	roundCounter();
+}
+
+function renderPlayers() {
+	removeChildren(playerAreaLeft);
+	removeChildren(playerAreaRight);
+
+	const playerSpots = players.map((player) => {
+		return PlayerSpot(player.order, player.name);
+	});
+
+	toggleClasses(playerSpots[0], ["active-player", "inactive-player"]);
+
+	const leftPlayers: typeof playerSpots = [];
+	const rightPlayers: typeof playerSpots = [];
+
+	playerSpots.forEach((player, ind) => {
+		if (ind % 2 == 0) {
+			leftPlayers.push(player);
+		} else {
+			rightPlayers.push(player);
+		}
+	});
+
+	addChildren(playerAreaLeft, leftPlayers);
+	addChildren(playerAreaRight, rightPlayers);
+}
+
+function resetAfterMatch(cardId, cardMatchDict) {
 	cardMatchDict[cardId].matched = true;
 	increaseScore();
 	renderScore();
@@ -188,11 +230,29 @@ function binaryIdMatch(ids: Array<string>) {
 	return ids[0] == ids[1];
 }
 
+const cards = prepareDeck(animalDeck);
+prepareBoard(cards);
+renderPlayers();
+
 let matchPredicate = binaryIdMatch;
+
+let frozen: boolean = false;
 
 ///////////////////////
 /// Event Listeners ///
 ///////////////////////
+
+const resetButton = document.getElementById("reset-button") as HTMLElement;
+resetButton.addEventListener("click", (event) => {
+	roundsPlayed = 0;
+	playerTurn = 0;
+
+	renderPlayers();
+
+	removeChildren(cardGrid);
+	const cards = prepareDeck(animalDeck);
+	prepareBoard(cards);
+});
 
 document.addEventListener("click", (event) => {
 	if (frozen == true) {
@@ -206,6 +266,7 @@ document.addEventListener("click", (event) => {
 
 		const currentCardId = currentFlipCard.id.split("_")[0];
 
+		const cardMatchDict = getMatchDict();
 		const { matched } = cardMatchDict[currentCardId];
 
 		const ongoingSelection = !matched && selectedCards.length < 2;
@@ -235,7 +296,7 @@ document.addEventListener("click", (event) => {
 
 		const match = matchPredicate(cardIds);
 
-		if (match) resetAfterMatch(currentCardId);
+		if (match) resetAfterMatch(currentCardId, cardMatchDict);
 		else {
 			frozen = true;
 

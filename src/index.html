@@ -17,65 +17,28 @@
 		<body style="background-color:#FFEBB4"></style>
 		<header class="h-1/6 font-bungee">
 			<h1 class="text-center">Match-and-Memory</h1>
-			<div id="round-board" class="h-2/6 w-full flex justify-around"></div>
+			<div
+				id="round-board"
+				class="h-2/6 w-full flex justify-around"
+			></div>
+			<button
+				id="reset-button"
+				class="h-[1.5rem] rounded bg-slate-400 px-2"
+			>
+				Reset
+			</button>
 		</header>
-		<main class="flex justify-evenly align-middle items-center w-full h-full">
-			<div id="player-area-left" class="player-area">
-				<div id="player1" class="player-spot inactive-player">
-					<div>
-						<p>Player Name:</p>
-					</div>
-					<div class="player-name"><p>test1</p></div>
-					<div><p>Player Score:</p></div>
-					<div class="player-score">
-						<!-- can contain either numerical value and/or a stack of cards that they player won -->
-						<p>0</p>
-					</div>
-				</div>
-
-				<div id="player2" class="player-spot inactive-player">
-					<div>
-						<p>Player Name:</p>
-					</div>
-					<div class="player-name"><p>test2</p></div>
-					<div><p>Player Score:</p></div>
-					<div class="player-score">
-						<!-- can contain either numerical value and/or a stack of cards that they player won -->
-						<p>0</p>
-					</div>
-				</div>
-			</div>
-
-			<div id="player-area-right" class="player-area order-1">
-				<div id="player3" class="player-spot inactive-player">
-					<div>
-						<p>Player Name:</p>
-					</div>
-					<div class="player-name"><p>test3</p></div>
-					<div><p>Player Score:</p></div>
-					<div class="player-score">
-						<!-- can contain either numerical value and/or a stack of cards that they player won -->
-						<p>0</p>
-					</div>
-				</div>
-
-				<div id="player4" class="player-spot inactive-player">
-					<div>
-						<p>Player Name:</p>
-					</div>
-					<div class="player-name"><p>test4</p></div>
-					<div><p>Player Score:</p></div>
-					<div class="player-score">
-						<!-- can contain either numerical value and/or a stack of cards that they player won -->
-						<p>0</p>
-					</div>
-				</div>
-			</div>
+		<main
+			class="flex justify-evenly align-middle items-center w-full h-full"
+		>
+			<div id="player-area-left" class="player-area"></div>
 
 			<div
 				id="card-grid"
 				class="h-[360px] w-[660px] grid grid-cols-6 gap-2"
 			></div>
+
+			<div id="player-area-right" class="player-area"></div>
 		</main>
 
 		<script type="module" src="main.ts"></script>

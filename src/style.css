@@ -15,6 +15,18 @@ h1 {
 	@apply flex flex-col items-center justify-evenly h-1/2 w-full bg-slate-400 border-double border-8;
 }
 
+.player-text {
+	@apply text-black;
+}
+
+.player-name {
+	@apply text-red-600;
+}
+
+.player-score {
+	@apply text-red-600;
+}
+
 .active-player {
 	@apply border-yellow-400;
 }

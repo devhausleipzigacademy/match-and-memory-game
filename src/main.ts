@@ -15,6 +15,9 @@ import animalDeck from "../data/animalDeck.json";
 
 // Test area
 
+const soundOnSvg = document.getElementById("sound-on") as HTMLImageElement;
+const soundOffSvg = document.getElementById("sound-off") as HTMLImageElement;
+
 // Round Counter
 
 let roundsPlayed: number = 0;
@@ -318,7 +321,7 @@ document.addEventListener("click", (event) => {
 		const cardAudio = currentFlipCard.querySelector(
 			"audio"
 		) as HTMLAudioElement;
-		cardAudio.play();
+		if (soundOn) cardAudio.play();
 
 		if (selectedCards.length != sequenceLength) {
 			return;
@@ -336,7 +339,7 @@ document.addEventListener("click", (event) => {
 
 			setTimeout(() => {
 				frozen = false;
-				failureSound.play();
+				if (soundOn) failureSound.play();
 				resetAfterNoMatch();
 			}, 2500);
 		}
@@ -356,4 +359,18 @@ document.addEventListener("mouseout", (event) => {
 			players[playerNumber - 1].name = nameInput;
 		}
 	}
+});
+
+const soundButton = document.getElementById("sound-button") as HTMLElement;
+
+let soundOn: boolean = true;
+
+soundButton.addEventListener("click", (event) => {
+	const target = event.target as HTMLElement;
+
+	if (soundOn) soundOn = false;
+	else soundOn = true;
+
+	toggleClasses(soundOnSvg, ["sound-switch"]);
+	toggleClasses(soundOffSvg, ["sound-switch"]);
 });

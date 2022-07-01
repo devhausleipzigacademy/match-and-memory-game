@@ -39,6 +39,10 @@ h1 {
 	@apply border-indigo-800;
 }
 
+.sound-switch {
+	display: none;
+}
+
 .flip-box {
 	perspective: 1000px; /* Remove this if you don't want the 3D effect */
 	@apply w-full h-full bg-transparent cursor-pointer;

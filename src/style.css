@@ -27,16 +27,16 @@ h1 {
 	@apply text-red-600;
 }
 
+.input-styling {
+	@apply w-5/6 appearance-none rounded-md placeholder-red-600 text-red-600 bg-slate-400 text-center hover:bg-slate-500 focus:placeholder-transparent focus:outline-none;
+}
+
 .active-player {
 	@apply border-yellow-400;
 }
 
 .inactive-player {
 	@apply border-indigo-800;
-}
-
-.input-styling {
-	@apply w-5/6 appearance-none rounded-md placeholder-white bg-slate-400 text-center hover:bg-slate-500 focus:placeholder-transparent focus:outline-none;
 }
 
 .flip-box {

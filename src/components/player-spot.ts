@@ -9,7 +9,7 @@ export function PlayerSpot(
 
 	player.innerHTML = `
         <p class="player-text">Player:</p>
-		<p><span class="player-name">${playerName}</span></p>
+		<input class="input-styling" type="text" placeholder="${playerName}"/>
         <p class="player-text">Score:</p>
 		<p><span class="player-score">0</span></p>
     `;

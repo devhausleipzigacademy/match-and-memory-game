@@ -51,25 +51,25 @@ let sequenceLength = 2;
 const players: Array<Player> = [
 	{
 		id: "0000001",
-		name: "Example Jane",
+		name: "Player 1",
 		order: 1,
 		score: 0,
 	},
 	{
 		id: "0000002",
-		name: "Example Steve",
+		name: "Player 2",
 		order: 2,
 		score: 0,
 	},
 	{
 		id: "0000003",
-		name: "Example Maxine",
+		name: "Player 3",
 		order: 3,
 		score: 0,
 	},
 	{
 		id: "0000004",
-		name: "Example Phillip",
+		name: "Player 4",
 		order: 4,
 		score: 0,
 	},
@@ -328,12 +328,14 @@ document.addEventListener("mouseout", (event) => {
 	const target = event.target as HTMLInputElement;
 
 	if (target.matches(".player-spot input")) {
-		const nameInput = target.value;
+		if (target.value !== "") {
+			const nameInput = target.value;
 
-		const playerElement = target.closest(".player-spot") as HTMLElement;
-		const playerName: string = playerElement.id;
-		const playerNumber = Number(playerName.slice(-1));
-		players[playerNumber - 1].name = nameInput;
-		console.log(players);
+			const playerElement = target.closest(".player-spot") as HTMLElement;
+			const playerName: string = playerElement.id;
+			const playerNumber = Number(playerName.slice(-1));
+			players[playerNumber - 1].name = nameInput;
+			console.log(players);
+		}
 	}
 });

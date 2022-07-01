@@ -113,13 +113,9 @@ function placeCards(cards: Array<HTMLElement>): void {
 	const cardElements = cards.map((card) => {
 		const element = newElement("div", [
 			"grid-cell",
-			"bg-blue-400",
 			"rounded-md",
-			"shadow-md",
 			"w-[100px]",
 			"h-[100px]",
-			"border",
-			"border-slate-700",
 		]);
 		addChildren(element, [card]);
 		return element;

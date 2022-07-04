@@ -118,8 +118,8 @@ function placeCards(cards: Array<HTMLElement>): void {
 		const element = newElement("div", [
 			"grid-cell",
 			"rounded-md",
-			"w-[170px]",
-			"h-[170px]",
+			"w-[120px]",
+			"h-[120px]",
 		]);
 		addChildren(element, [card]);
 		return element;

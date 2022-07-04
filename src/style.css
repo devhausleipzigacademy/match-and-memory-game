@@ -24,11 +24,11 @@ h1 {
 }
 
 .active-player {
-	@apply border-yellow-400;
+	@apply text-pink-400 bg-pink-400;
 }
 
 .inactive-player {
-	@apply border-indigo-800;
+	@apply text-black;
 }
 
 .sound-switch {
